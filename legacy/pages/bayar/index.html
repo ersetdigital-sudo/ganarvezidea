@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pembayaran — ganarvezidea</title>
+<link rel="stylesheet" href="/assets/theme.css"><script src="/assets/main.js"></script><script src="https://cdn.moda.app/runtime-libs/tailwind-browser-4.1.13-index.global.min.js"></script><style data-moda-export-fonts="true">@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-thin.ttf") format("truetype"); font-style: normal; font-weight: 100; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-thinitalic.ttf") format("truetype"); font-style: italic; font-weight: 100; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-extralight.ttf") format("truetype"); font-style: normal; font-weight: 200; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-extralightitalic.ttf") format("truetype"); font-style: italic; font-weight: 200; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-light.ttf") format("truetype"); font-style: normal; font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-lightitalic.ttf") format("truetype"); font-style: italic; font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-italic.ttf") format("truetype"); font-style: italic; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-medium.ttf") format("truetype"); font-style: normal; font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-mediumitalic.ttf") format("truetype"); font-style: italic; font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-semibold.ttf") format("truetype"); font-style: normal; font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-semibolditalic.ttf") format("truetype"); font-style: italic; font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-bold.ttf") format("truetype"); font-style: normal; font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-bolditalic.ttf") format("truetype"); font-style: italic; font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-extrabold.ttf") format("truetype"); font-style: normal; font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-extrabolditalic.ttf") format("truetype"); font-style: italic; font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-black.ttf") format("truetype"); font-style: normal; font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url("../../fonts/inter_24pt-blackitalic.ttf") format("truetype"); font-style: italic; font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-extralight.ttf") format("truetype"); font-style: normal; font-weight: 200; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-extralightitalic.ttf") format("truetype"); font-style: italic; font-weight: 200; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-light.ttf") format("truetype"); font-style: normal; font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-lightitalic.ttf") format("truetype"); font-style: italic; font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-italic.ttf") format("truetype"); font-style: italic; font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-medium.ttf") format("truetype"); font-style: normal; font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-mediumitalic.ttf") format("truetype"); font-style: italic; font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-semibold.ttf") format("truetype"); font-style: normal; font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-semibolditalic.ttf") format("truetype"); font-style: italic; font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-bold.ttf") format("truetype"); font-style: normal; font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-bolditalic.ttf") format("truetype"); font-style: italic; font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-extrabold.ttf") format("truetype"); font-style: normal; font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url("../../fonts/plusjakartasans-extrabolditalic.ttf") format("truetype"); font-style: italic; font-weight: 800; font-display: swap; }</style></head>
+<body class="gridbg min-h-screen"><img id="lgd" src="../../images/3b9ed4ab-7d32-40c7-bc37-57bf6dd65784.png" alt="" style="display:none">
+<div id="lgs" class="hidden"><img data-k="DANA" src="../../images/248e11b4-2849-42fa-8a09-e1987efe9d3e.png" alt=""><img data-k="OVO" src="../../images/76a7673a-17f6-44a2-9dda-0b4be3773802.png" alt=""><img data-k="GoPay" src="../../images/f8592401-3679-40de-94ab-a4960b857771.png" alt=""><img data-k="ShopeePay" src="../../images/3723daad-da44-4ae3-80b1-b3463f295f7b.png" alt=""><img data-k="BCA" src="../../images/87bd109a-477d-4206-a291-c7004c8ce140.png" alt=""><img data-k="BRI" src="../../images/e64f3228-a8f8-4dcc-a383-02f975faffc2.png" alt=""><img data-k="Mandiri" src="../../images/fc0a3037-cbd3-48c6-b50f-e3ee84660114.png" alt=""><img data-k="BNI" src="../../images/f23899ad-4ef0-442a-b14e-a59dfde1975b.png" alt=""></div>
+<img id="lg" src="../../images/fbb497f6-a50c-493b-9a75-2f21d70f2be5.png" alt="" class="hidden">
+<div id="hdr"></div><script>hdr.outerHTML=header(true)</script>
+<main class="relative mx-auto max-w-6xl px-4 pb-16 pt-6">
+ <nav class="relative text-sm text-[#6b6358]"><a href="/" class="hover:text-[#1c1a17]">Home</a> / <span class="text-[#1c1a17]">Pembayaran</span></nav>
+ <h1 class="relative mt-4 text-2xl font-extrabold sm:text-4xl">Pembayaran</h1>
+ <div id="step1" class="relative mt-6 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+  <div class="min-w-0 space-y-6">
+   <div class="card p-5 sm:p-6"><h2 class="mb-4 font-bold">Metode pembayaran</h2><div id="pm" class="space-y-5"></div></div>
+   <div class="card p-5 sm:p-6"><label class="mb-2 block font-bold">Nomor WhatsApp</label><p class="mb-3 text-sm text-[#6b6358]">Struk dan status pesanan dikirim ke nomor ini.</p><input id="wa" inputmode="numeric" class="inp" placeholder="08xx xxxx xxxx"></div>
+  </div>
+  <aside class="card p-5 sm:p-6 lg:sticky lg:top-24">
+   <h2 class="font-bold">Ringkasan pesanan</h2>
+   <dl class="mt-4 space-y-3 text-sm" id="sum"></dl>
+   <div class="mt-4 flex items-center justify-between border-t border-[#E3E8E5] pt-4"><span class="font-semibold">Total</span><span id="tot" class="fh text-2xl font-extrabold text-[#12A150]"></span></div>
+   <button id="pay" class="btn mt-5 w-full">Bayar Sekarang</button><p id="er" class="mt-2 text-center text-xs text-red-600"></p>
+  </aside>
+ </div>
+ <div id="step2" class="relative mx-auto mt-6 hidden max-w-xl"></div>
+</main>
+<script>
+let _o=null;try{_o=JSON.parse(sessionStorage.order||'null')}catch(e){}
+const O=_o||{l:'Token Listrik PLN',n:'14234567890',p:'Token Rp100.000',h:101500};
+const G=[['QRIS',[['QRIS','#ea1c24']]],['E-Wallet',[['DANA','#118eea'],['OVO','#4c3494'],['GoPay','#00aa13'],['ShopeePay','#f0612b']]],['Virtual Account',[['BCA','#005eaa'],['BRI','#00529c'],['Mandiri','#003d79'],['BNI','#f15a23']]]];
+let m='',fee=0;const fees={QRIS:0,'E-Wallet':1000,'Virtual Account':4000};
+pm.innerHTML=G.map(([g,a])=>`<div><div class="mb-2 text-xs font-semibold uppercase tracking-wide text-[#6b6358]">${g}</div><div class="grid grid-cols-2 gap-3 sm:grid-cols-4">${a.map(([n,c])=>`<button class="card opt hov flex flex-col items-start gap-2 p-3" data-m="${n}" data-g="${g}">${lg(n,'!h-8 !w-full')}<span class="text-xs text-[#6b6358]">${g=='Virtual Account'?'VA '+n:n}</span></button>`).join('')}</div></div>`).join('');fillLogos();
+function sum(){const t=O.h+fee;window.T=t;document.getElementById('sum').innerHTML=[['Layanan',O.l],['Nomor',O.n],['Produk',O.p],['Harga',rp(O.h)],['Biaya layanan',rp(fee)],['Metode',m||'-']].map(([a,b])=>`<div class="flex justify-between gap-3"><dt class="text-[#6b6358]">${a}</dt><dd class="break-all text-right">${b}</dd></div>`).join('');tot.textContent=rp(t)}
+pm.onclick=e=>{const b=e.target.closest('.opt');if(!b)return;m=b.dataset.m;fee=fees[b.dataset.g];document.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x==b));sum()};
+wa.oninput=()=>wa.value=wa.value.replace(/\D/g,'');
+pay.onclick=()=>{if(!m){er.textContent='Pilih metode pembayaran.';return}if(wa.value.length<9){er.textContent='Masukkan nomor WhatsApp yang valid.';return}
+ const d=new Date(),inv='INV-'+d.toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+ const g=G.find(x=>x[1].some(y=>y[0]==m))[0];
+ const ins=g=='QRIS'?`<div class="mx-auto mt-4 grid h-48 w-48 grid-cols-8 gap-0.5 rounded-xl bg-white p-3">${Array.from({length:64},()=>`<div class="${Math.random()>.5?'bg-black':''}"></div>`).join('')}</div><ol class="mt-4 list-decimal space-y-1 pl-5 text-sm text-[#3a352e]"><li>Buka aplikasi e-wallet atau mobile banking.</li><li>Pindai kode QRIS di atas.</li><li>Periksa total lalu konfirmasi pembayaran.</li></ol>`
+  :g=='Virtual Account'?`<div class="mt-4 rounded-xl bg-[#FFFFFF] p-4"><div class="text-xs text-[#6b6358]">Nomor VA ${m}</div><div class="fh mt-1 break-all text-2xl font-extrabold tracking-wider">8808 ${Math.random().toString().slice(2,6)} ${Math.random().toString().slice(2,6)}</div></div><ol class="mt-4 list-decimal space-y-1 pl-5 text-sm text-[#3a352e]"><li>Buka m-banking / ATM ${m}.</li><li>Pilih Transfer › Virtual Account.</li><li>Masukkan nomor VA dan konfirmasi.</li></ol>`
+  :`<ol class="mt-4 list-decimal space-y-1 pl-5 text-sm text-[#3a352e]"><li>Buka aplikasi ${m} di HP kamu.</li><li>Setujui notifikasi pembayaran dari ganarvezidea.</li><li>Masukkan PIN untuk menyelesaikan.</li></ol>`;
+ step1.classList.add('hidden');step2.classList.remove('hidden');
+ step2.innerHTML=`<div class="card pop p-6 sm:p-8 text-center"><div class="text-sm text-[#6b6358]">Nomor invoice</div><div class="fh mt-1 break-all text-xl font-extrabold">${inv}</div>
+ <div class="mt-5 text-sm text-[#6b6358]">Selesaikan pembayaran dalam</div><div id="tm" class="fh text-5xl font-extrabold text-[#12A150]">15:00</div>
+ <div class="mt-5 flex justify-between border-t border-[#E3E8E5] pt-4 text-sm"><span class="text-[#6b6358]">Total bayar</span><b>${rp(T)}</b></div>
+ <div class="mt-2 flex justify-between text-sm"><span class="text-[#6b6358]">Metode</span><b>${m}</b></div>
+ <div class="text-left">${ins}</div><p class="mt-5 text-xs text-[#6b6358]">Struk akan dikirim ke WhatsApp ${wa.value}. (Simulasi)</p><a href="/" class="btn2 mt-5 w-full">Kembali ke Beranda</a></div>`;
+ const end=Date.now()+900e3;const iv=setInterval(()=>{const s=Math.max(0,(end-Date.now())/1000|0);tm.textContent=String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0');if(!s){clearInterval(iv);tm.textContent='Kedaluwarsa'}},1000);scrollTo(0,0)};
+sum();
+</script>
+</body></html>
