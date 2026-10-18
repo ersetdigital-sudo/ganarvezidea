@@ -73,7 +73,6 @@ export default function BayarPage() {
       total: O.h + fee,
       wa,
       va: "8808 " + v1 + " " + v2,
-      qr: Array.from({ length: 64 }, () => Math.random() > 0.5),
     });
     window.scrollTo(0, 0);
   };
@@ -179,10 +178,12 @@ export default function BayarPage() {
               <div className="text-left">
                 {payment.group === "QRIS" ? (
                   <>
-                    <div className="mx-auto mt-4 grid h-48 w-48 grid-cols-8 gap-0.5 rounded-xl bg-white p-3">
-                      {payment.qr.map((black, i) => (
-                        <div key={i} className={black ? "bg-black" : ""}></div>
-                      ))}
+                    <div className="mx-auto mt-4 max-w-[300px] overflow-hidden rounded-xl">
+                      <img
+                        src="https://res.cloudinary.com/dqjh7utdb/image/upload/v1792161327/camhvfeu1lcm0ps8ieiz.jpg"
+                        alt="QRIS"
+                        className="h-auto w-full"
+                      />
                     </div>
                     <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-[#3a352e]">
                       <li>Buka aplikasi e-wallet atau mobile banking.</li>
