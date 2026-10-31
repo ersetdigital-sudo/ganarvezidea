@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Brand from "@/components/Brand";
 import { ServiceIcon } from "@/components/Icon";
-import { CATEGORIES, SERVICES } from "@/lib/data";
+import { CATEGORIES, SERVICES, rp } from "@/lib/data";
+import { checkOrder } from "@/lib/db/client";
+import { toPublicError } from "@/lib/db/errors";
 
 const QT = {
   pln: ["PLN", "Nomor meter / ID pelanggan", ["20rb", "50rb", "100rb"]],
@@ -53,6 +55,7 @@ export default function HomePage() {
   const [q, setQ] = useState("");
   const [inv, setInv] = useState("");
   const [result, setResult] = useState(null);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -71,6 +74,46 @@ export default function HomePage() {
     tick();
     const iv = setInterval(tick, 1000);
     return () => clearInterval(iv);
+  }, []);
+
+  const checkStatus = async (value) => {
+    const q = value.trim();
+    if (!q) {
+      setResult({ error: "Masukkan ID pesanan atau nomor tujuan dulu." });
+      return;
+    }
+    const brandSlug = process.env.NEXT_PUBLIC_BRAND_SLUG;
+    if (!brandSlug) {
+      setResult({ error: "Pencarian belum tersedia. Coba lagi sebentar." });
+      return;
+    }
+    setChecking(true);
+    setResult(null);
+    try {
+      const isRef = /[A-Z]/i.test(q);
+      const orders = await checkOrder({
+        brandSlug,
+        ref: isRef ? q.replace(/\s/g, "").toUpperCase() : null,
+        nomorTujuan: isRef ? null : q.replace(/\D/g, ""),
+      });
+      if (!orders.length) {
+        setResult({ error: "Pesanan tidak ditemukan. Cek kembali ID atau nomor tujuan." });
+      } else {
+        setResult({ order: orders[0] });
+      }
+    } catch (error) {
+      setResult({ error: toPublicError(error).message });
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  useEffect(() => {
+    const initial = new URLSearchParams(window.location.search).get("q");
+    if (!initial) return;
+    setInv(initial);
+    void checkStatus(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filtered = SERVICES.filter(
@@ -284,31 +327,64 @@ export default function HomePage() {
       <section id="cek" className="mx-auto max-w-3xl px-4 pt-20">
         <div className="card relative overflow-hidden p-6 sm:p-8">
           <h2 className="relative text-2xl font-extrabold">Cek status pesanan</h2>
-          <p className="relative mt-1 text-sm text-[#6b6358]">Masukkan nomor invoice dari struk kamu.</p>
+          <p className="relative mt-1 text-sm text-[#6b6358]">Masukkan ID pesanan atau nomor tujuan.</p>
           <form
             className="relative mt-5 flex flex-col gap-3 sm:flex-row"
             onSubmit={(e) => {
               e.preventDefault();
-              const v = inv.trim();
-              setResult(v ? v.replace(/</g, "") : "");
+              void checkStatus(inv);
             }}
           >
-            <input value={inv} onChange={(e) => setInv(e.target.value)} className="inp" placeholder="Contoh: INV-20261018-AB12" />
-            <button className="btn shrink-0">Cek Status</button>
+            <input
+              value={inv}
+              onChange={(e) => setInv(e.target.value)}
+              className="inp"
+              placeholder="GNV-261031-XXXXXX / 0812..."
+            />
+            <button className="btn shrink-0" disabled={checking}>
+              {checking ? "Mencari…" : "Cek Status"}
+            </button>
           </form>
           <div className="relative">
-            {result === "" ? (
-              <p className="mt-3 text-sm text-red-600">Masukkan nomor invoice dulu.</p>
-            ) : result ? (
+            {result?.error ? (
+              <p className="mt-3 text-sm text-red-600">{result.error}</p>
+            ) : result?.order ? (
               <div className="pop mt-4 rounded-xl border border-[#E3E8E5] bg-[#FFFFFF] p-4 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-[#6b6358]">Invoice</span>
-                  <b>{result}</b>
+                <div className="flex justify-between gap-3">
+                  <span className="text-[#6b6358]">ID Pesanan</span>
+                  <b className="font-mono">{result.order.ref}</b>
                 </div>
-                <div className="mt-2 flex justify-between">
+                <div className="mt-2 flex justify-between gap-3">
+                  <span className="text-[#6b6358]">Produk</span>
+                  <b className="text-right">{result.order.produk ?? result.order.layanan}</b>
+                </div>
+                <div className="mt-2 flex justify-between gap-3">
                   <span className="text-[#6b6358]">Status</span>
-                  <span className="font-semibold text-green-700">Sukses ✓</span>
+                  <span className="font-semibold text-green-700">
+                    {{
+                      menunggu_cek: "Lagi dicek admin",
+                      menunggu_bayar: "Menunggu pembayaran",
+                      sudah_bayar: "Pembayaran dicek admin",
+                      sukses: "Sukses",
+                      dibatalkan: "Dibatalkan",
+                    }[result.order.status] ?? result.order.status}
+                  </span>
                 </div>
+                <div className="mt-2 flex justify-between gap-3">
+                  <span className="text-[#6b6358]">Total</span>
+                  <b>{result.order.total !== null ? rp(result.order.total) : "Belum ditetapkan"}</b>
+                </div>
+                {result.order.sn ? (
+                  <div className="mt-2 flex justify-between gap-3">
+                    <span className="text-[#6b6358]">SN / Token</span>
+                    <b className="font-mono text-[#0E8A44]">{result.order.sn}</b>
+                  </div>
+                ) : null}
+                {result.order.status === "menunggu_cek" || result.order.status === "menunggu_bayar" ? (
+                  <a href={`/bayar?ref=${encodeURIComponent(result.order.ref)}`} className="btn mt-4 w-full">
+                    Buka Pembayaran
+                  </a>
+                ) : null}
               </div>
             ) : null}
           </div>

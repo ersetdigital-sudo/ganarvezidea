@@ -6,17 +6,22 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Icon, { ServiceIcon } from "@/components/Icon";
 import Logo from "@/components/Logo";
-import { OPS, SVC, detectOp, rp } from "@/lib/data";
+import { OPS, detectOp, rp } from "@/lib/data";
+import { createBillCheck, createOrder } from "@/lib/db/client";
+import { toPublicError } from "@/lib/db/errors";
+import { saveRef } from "@/lib/refs";
 
-export default function LayananClient({ initialKey }) {
+export default function LayananClient({ initialKey, services, brandSlug, methodId }) {
   const router = useRouter();
   const key = initialKey;
-  const S = SVC[key];
+  const S = services[key] ?? Object.values(services)[0];
 
   const [sel, setSel] = useState(-1);
   const [no, setNo] = useState("");
   const [region, setRegion] = useState(S.reg ? S.reg[1][0] : "");
+  const [wa, setWa] = useState("");
   const [err, setErr] = useState("");
+  const [pending, setPending] = useState(false);
 
   let ptTitle = "Pilih nominal";
   if (key === "bpjs") ptTitle = "Pilih jumlah bulan iuran";
@@ -27,7 +32,7 @@ export default function LayananClient({ initialKey }) {
   const detected = S.op ? detectOp(no) : null;
   const digits = no.replace(/\D/g, "");
 
-  const go = () => {
+  const go = async () => {
     if (no.length < 6) {
       setErr("Masukkan nomor yang valid.");
       return;
@@ -36,16 +41,62 @@ export default function LayananClient({ initialKey }) {
       setErr("Pilih nominal/produk dulu.");
       return;
     }
-    const o = S.op && detectOp(no);
+    if (!brandSlug || !methodId) {
+      setErr("Pembayaran belum tersedia. Coba lagi sebentar.");
+      return;
+    }
+
+    const chosen = S.p[sel];
+    if (!chosen?.sid) {
+      setErr("Produk ini belum tersedia. Coba pilih produk lain.");
+      return;
+    }
+
+    const input = { [S.inputKey || chosen.inputKey || "nomor_tujuan"]: no };
+    if (S.regionKey && region) input[S.regionKey] = region;
+    if (S.bill) input.durasi = chosen.t;
+
+    setErr("");
+    setPending(true);
     try {
-      sessionStorage.order = JSON.stringify({
-        l: S.n + (o ? " " + o[0] : "") + (S.reg ? " · " + region : ""),
-        n: no,
-        p: S.p[sel].t,
-        h: S.p[sel].h,
-      });
-    } catch (e) {}
-    router.push("/bayar");
+      let ref;
+      if (S.bill) {
+        if (wa.replace(/\D/g, "").length < 9) {
+          setErr("Masukkan nomor WhatsApp yang valid (minimal 9 angka).");
+          setPending(false);
+          return;
+        }
+        const created = await createBillCheck({
+          brandSlug,
+          serviceId: chosen.sid,
+          nomorTujuan: no,
+          input,
+          waPembeli: wa.replace(/\D/g, ""),
+          paymentMethodId: methodId,
+        });
+        ref = created.ref;
+      } else {
+        if (!chosen.pid) {
+          setErr("Nominal ini belum tersedia. Coba pilih nominal lain.");
+          setPending(false);
+          return;
+        }
+        const created = await createOrder({
+          brandSlug,
+          serviceId: chosen.sid,
+          productId: chosen.pid,
+          nomorTujuan: no,
+          input,
+          paymentMethodId: methodId,
+        });
+        ref = created.ref;
+      }
+      saveRef(ref);
+      router.push(`/bayar?ref=${encodeURIComponent(ref)}`);
+    } catch (error) {
+      setErr(toPublicError(error).message);
+      setPending(false);
+    }
   };
 
   return (
@@ -58,7 +109,7 @@ export default function LayananClient({ initialKey }) {
           <span className="text-[#1c1a17]">{S.n}</span>
         </nav>
         <div id="tabs" className="relative mt-4 hidden flex-wrap gap-2 md:flex">
-          {Object.entries(SVC).map(([x, v]) => (
+          {Object.entries(services).map(([x, v]) => (
             <a key={x} href={`/layanan?s=${x}`} className={`chip inline-flex items-center gap-1.5 ${x === key ? "on" : ""}`}>
               <Icon name={v.i} className="h-4 w-4 shrink-0" />
               {v.n}
@@ -109,6 +160,26 @@ export default function LayananClient({ initialKey }) {
                   {detected ? <Logo name={detected[0]} cls="pop" /> : null}
                 </span>
               </div>
+              {S.bill && (
+                <div className="mt-4">
+                  <label className="mb-2 block text-sm font-semibold">
+                    Nomor WhatsApp (untuk link bayar)
+                  </label>
+                  <input
+                    value={wa}
+                    onChange={(e) => {
+                      setWa(e.target.value.replace(/\D/g, ""));
+                      setErr("");
+                    }}
+                    inputMode="numeric"
+                    className="inp"
+                    placeholder="08xx xxxx xxxx"
+                  />
+                  <p className="mt-2 text-xs text-[#6b6358]">
+                    Nominal dan link bayar dikirim admin ke WhatsApp ini.
+                  </p>
+                </div>
+              )}
               <p className={`mt-2 text-xs text-[#6b6358] ${S.op ? "" : "hidden"}`}>
                 {detected ? (
                   <span className="text-green-700">✓ Terdeteksi: <b>{detected[0]}</b></span>
@@ -162,7 +233,9 @@ export default function LayananClient({ initialKey }) {
                         <Icon name="check" className="h-3 w-3 shrink-0" />
                       </span>
                       <div className="text-sm font-bold">{p.t}</div>
-                      <div className="mt-2 text-sm font-semibold text-[#12A150]">{rp(p.h)}</div>
+                      <div className="mt-2 text-sm font-semibold text-[#12A150]">
+                        {p.bill ? "Cek tagihan" : rp(p.h)}
+                      </div>
                     </button>
                   );
                 })}
@@ -191,9 +264,13 @@ export default function LayananClient({ initialKey }) {
             </dl>
             <div className="mt-4 flex items-center justify-between border-t border-[#E3E8E5] pt-4">
               <span className="font-semibold">Total</span>
-              <span className="fh text-2xl font-extrabold text-[#12A150]">{rp(sel >= 0 ? S.p[sel].h : 0)}</span>
+              <span className="fh text-2xl font-extrabold text-[#12A150]">
+                {sel >= 0 && S.p[sel].bill ? "Cek tagihan" : rp(sel >= 0 ? S.p[sel].h : 0)}
+              </span>
             </div>
-            <button onClick={go} className="btn mt-5 w-full">Lanjut Bayar</button>
+            <button onClick={go} disabled={pending} className="btn mt-5 w-full disabled:opacity-60">
+              {pending ? "Memproses…" : "Lanjut Bayar"}
+            </button>
             <p className="mt-2 text-center text-xs text-red-600">{err}</p>
           </aside>
         </div>

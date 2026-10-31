@@ -2,3 +2,6 @@ node_modules
 .next
 out
 .commandcode
+.env*
+!.env.example
+next-env.d.ts
